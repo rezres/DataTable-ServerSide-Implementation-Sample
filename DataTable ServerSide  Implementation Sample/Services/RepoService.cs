@@ -86,7 +86,6 @@ namespace DataTable_ServerSide__Implementation_Sample.Services
 
         public void Dispose()
         {
-            //Implement this for non in memory Data base 
             context.Dispose();
         }
     }
