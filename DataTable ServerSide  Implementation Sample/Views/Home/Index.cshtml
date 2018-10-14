@@ -1,0 +1,92 @@
+﻿<div class="form-group">
+    <div class="form-group row">
+        <div class="col-md-3 pull-right">
+            <button onclick="Load('@Url.Action("Create")')" class="btn btn-primary text-light pull-right">
+                Add New Product
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <table Id="productsDataTable" class="table table-striped table-bordered table-hover dataTable no-footer dtr-inline">
+            <thead class="themed-back-silk themed-color-charcoal">
+                <tr>
+                    <th width="5%">Id</th>
+                    <th width="20%">Title </th>
+                    <th width="30%">Main Category</th>
+                    <th width="10%">Sub Category</th>
+                    <th width="25%">Actions</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+
+</div>
+<script type="text/ng-template" Id="links">
+    <a href="javascript:void(0)" onclick="Load('@Url.Action("Details", new { Id = "-Id-"})')">
+        <i class="glyphicon glyphicon-list text-primary largeGlyph"></i>
+    </a>
+    <a href="javascript:void(0)" onclick="Load('@Url.Action("Edit", new { Id = "-Id-"})')">
+        <i class="glyphicon glyphicon-edit text-success largeGlyph"></i>
+    </a>
+    <a href="javascript:void(0)" onclick="Load('@Url.Action("Delete", new { Id = "-Id-"})')">
+        <i class="glyphicon glyphicon-trash text-danger largeGlyph "></i>
+    </a>
+</script>
+@section scripts {
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            myDatatableAPI = BuildDatatable();
+
+            $('modal').on('.hidden.bs.modal', function () { dtAPI.ajax.reload(); });
+        });
+
+        function BuildDatatable() {
+            var actionLinksTemplate = $('#links').html();
+
+                return $('#productsDataTable').DataTable(
+                    {
+                        pageLength: 10,
+                        processing: true,
+                        serverSide: true,
+                        language: {
+                            processing: '<div id="loaderSpan" class="loading" ></div>',
+                        },
+                        ajax: {
+                            url: "@Url.Action("GetDTResponseAsync")",
+                            type: "POST",
+                            error: function (ex) {
+                            }
+                        },
+                        columns: [
+                            { data: "id", title: "NO", width: "50px", class: "text-center" },
+                            { data: "title", title: "TITLE", width: "20%", class: "text-center" },
+                            { data: "mainCategory.name", title: "MainCategory", width: "20%", class: "text-center" },
+                            { data: "subCategory.name", title: "SubCategory", width: "20%", class: "text-center" },
+                            { data: "", defaultContent: '', title: "Modify", width: "15%", class: "text-center" }
+                        ],
+                        order: [[0, "asc"]],
+                        columnDefs: [
+                            { "orderable": false, "targets": [-1] },
+                            { "searchable": false, "targets": [-1] },
+                            { "orderable": true, "targets": [0,1,2,3] },
+                            { "searchable": true, "targets": [0,1,2,3] }
+                        ],
+                        drawCallback: function (oSettings) {
+                            if (oSettings.aiDisplay.length > 0) {
+                                for (var i = 0, iLen = oSettings.aiDisplay.length; i < iLen; i++) {
+                                    var row = oSettings.aoData[oSettings.aiDisplay[i]];
+                                    var rowItem = row.nTr;
+                                    var rowID = row._aData.id;
+                                    $('td:eq(0)', rowItem).html(i + 1 + oSettings._iDisplayStart + '.');
+                                    var actionLinks = actionLinksTemplate.replace(new RegExp("-Id-", 'g'), rowID);
+                                    $('td:eq(-1)', rowItem).html(actionLinks);
+                                }
+                            }
+                        }
+                    });
+            }
+
+
+    </script>
+}

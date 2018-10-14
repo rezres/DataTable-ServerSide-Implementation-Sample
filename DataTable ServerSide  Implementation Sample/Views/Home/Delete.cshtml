@@ -1,0 +1,43 @@
+﻿@model DataTable_ServerSide__Implementation_Sample.Data.Model.Product
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Product</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Id)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.MainCatId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.MainCategory.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.SubCatId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SubCategory.Name)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete" id="deleteForm">
+        <input type="button" onclick="AjaxSubmit('deleteForm')" value="Delete Product" class="btn btn-danger" />
+    </form>
+</div>

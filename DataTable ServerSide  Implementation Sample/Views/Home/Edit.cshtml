@@ -1,0 +1,39 @@
+﻿@model DataTable_ServerSide__Implementation_Sample.Data.Model.Product
+
+<h4>Product</h4>
+<hr />
+<div class="row">
+    <div class="col-md-10">
+        <form asp-action="Edit" id="updateForm">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input asp-for="Id" class="form-control" type="hidden" />
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MainCatId" class="control-label"></label>
+                <select asp-for="MainCatId" class="form-control"
+                        asp-items="@ViewBag.ddlCategories">
+                    <option>Please select Category</option>
+                </select>                <span asp-validation-for="MainCatId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SubCatId" class="control-label"></label>
+                <select asp-for="SubCatId" class="form-control"
+                        asp-items="@ViewBag.ddlCategories">
+                    <option>Please select Category</option>
+                </select>                <span asp-validation-for="SubCatId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="button" onclick="AjaxSubmit('updateForm')" value="Update" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+</div>
