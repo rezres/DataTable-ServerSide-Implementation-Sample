@@ -59,32 +59,7 @@ you can find the sample under \Views\Home\Index.cshtml.
 This function will accept the datatable options which will be sent by the plugin, you can have a look at [Options class](https://github.com/rezres/DataTable-ServerSide-Implementation-Sample/blob/master/DataTable%20ServerSide%20%20Implementation%20Sample/Data/Requests/DataTableOptions.cs) if you are interested. 
 Now you can either use the repo I created, and use GetOptionResponseWithSpec Function which will return [Datatable Response Object](https://github.com/rezres/DataTable-ServerSide-Implementation-Sample/blob/master/DataTable%20ServerSide%20%20Implementation%20Sample/Data/Responses/DataTableResponse.cs)
 all you need to assign is the type, any expressions you want to include (Navigation Properties)
-Below is an example you can find in HomeController. 
-
-
-`                                                                                                                                     
-public async Task<IActionResult> GetDTResponseAsync(DataTableOptions options)                                                               
-        {                                                                                                                         
-            try
-            {
-            
-                var specs = new BaseSpecification<Product>(e => e.MainCategory,e => e.SubCategory);
-                
-                return Ok(await ProductRepo.GetOptionResponseWithSpec(options, specs));
-                
-            }
-            
-            catch (Exception e)
-            {
-            
-                this.ILogger.LogError("Error Occurred While Running GetOptions @ HomeController : \n" + e.Message);
-                
-                return BadRequest();
-                
-            }
-            
-}
-`
+Below is an example you can find in HomeController\GetDTResponseAsync. 
 
 
 If you don't want to use the Repository, all you need to do is actually use the [GetOptionResponseAsync] Function, you can find it at [Datatable Helper class](https://github.com/rezres/DataTable-ServerSide-Implementation-Sample/blob/master/DataTable%20ServerSide%20%20Implementation%20Sample/Extensions/DataTableHelper.cs)
