@@ -14,24 +14,28 @@ ordering, and pagination specified by the options sent from the datatable, by le
 
 ## Datatable Options (View side)
 First you need to tell the plugin that it will be processed by the server by assigning these 2 options to true, and assign the url to the options 
-                       `processing: true,
-                        serverSide: true,
-                        ajax: {
-                            url: "@Url.Action("GetDTResponseAsync")",
-                            type: "POST",
-                            error: function (ex) {
-                            }`
+
+                       `                                                                                                                        
+                       processing: true,                                                                                
+                        serverSide: true,                                                                                                                 
+                        ajax: {                                                                                                         
+                            url: "@Url.Action("GetDTResponseAsync")",                                                     
+                            type: "POST",                                                         
+                            error: function (ex) {                                    
+                                                 }
+                            `
+                            
                             
 Now you need to specify columns options, the source of each columns, and is it searchable and orderable or not. 
 let's walk through these options 
 ### Columns 
- `
- columns: [
-                            { data: "id", title: "NO", width: "50px", class: "text-center" },
-                            { data: "title", title: "TITLE", width: "20%", class: "text-center" },
-                            { data: "mainCategory.name", title: "MainCategory", width: "20%", class: "text-center" },
-                            { data: "subCategory.name", title: "SubCategory", width: "20%", class: "text-center" },
-                            { data: "", defaultContent: '', title: "Modify", width: "15%", class: "text-center" }
+                          `
+                          columns: [                                                                                                                       
+                            { data: "id", title: "NO", width: "50px", class: "text-center" },                                   
+                            { data: "title", title: "TITLE", width: "20%", class: "text-center" },                              
+                            { data: "mainCategory.name", title: "MainCategory", width: "20%", class: "text-center" },                       
+                            { data: "subCategory.name", title: "SubCategory", width: "20%", class: "text-center" },                         
+                            { data: "", defaultContent: '', title: "Modify", width: "15%", class: "text-center" }                     
                         ]
                         `
                         
@@ -58,19 +62,27 @@ all you need to assign is the type, any expressions you want to include (Navigat
 Below is an example you can find in HomeController. 
 
 
-`        
-public async Task<IActionResult> GetDTResponseAsync(DataTableOptions options)
-        {
+`                                                                                                                                     
+public async Task<IActionResult> GetDTResponseAsync(DataTableOptions options)                                                               
+        {                                                                                                                         
             try
             {
+            
                 var specs = new BaseSpecification<Product>(e => e.MainCategory,e => e.SubCategory);
+                
                 return Ok(await ProductRepo.GetOptionResponseWithSpec(options, specs));
+                
             }
+            
             catch (Exception e)
             {
+            
                 this.ILogger.LogError("Error Occurred While Running GetOptions @ HomeController : \n" + e.Message);
+                
                 return BadRequest();
+                
             }
+            
 }
 `
 
@@ -79,7 +91,11 @@ If you don't want to use the Repository, all you need to do is actually use the 
 , this function will generate the IQuerable and execute it, and wrap the response, it is an extension method of IQuerable.
 You can use it like this. 
 
-`await context.Set<T>().GetOptionResponseAsync<T>(options);`
+
+`
+await context.Set<T>().GetOptionResponseAsync<T>(options);
+`
+
 
 of course keep in mind adding navigation properties (Include) if you have any.  
 
