@@ -9,8 +9,7 @@ It use EF Core and dotnet Core.
 ## How it works
 Datatable plugin will send the options to the server, based on these [options](https://datatables.net/examples/server_side/post.html) (which is defined by you) the server 
 will generate the according [IQueryable](https://www.developerhandbook.com/entity-framework/in-the-spotlight-demystifying-iqueryable-entity-framework-6/) which will execute at the database , it will automatically do the searching 
-ordering, and pagination specified by the options sent from the datatable, by leveraging [expression builders](https://blogs.msdn.microsoft.com/meek/2008/05/02/linq-to-entities-combining-predicates/) read more about expression builders [here]
-(https://stackoverflow.com/questions/35346630/creating-dynamic-expression-for-entity-framework) and [here](https://www.c-sharpcorner.com/UploadFile/c42694/dynamic-query-in-linq-using-predicate-builder/). 
+ordering, and pagination specified by the options sent from the datatable, by leveraging [expression builders](https://blogs.msdn.microsoft.com/meek/2008/05/02/linq-to-entities-combining-predicates/) read more about expression builders [here](https://stackoverflow.com/questions/35346630/creating-dynamic-expression-for-entity-framework) and [here](https://www.c-sharpcorner.com/UploadFile/c42694/dynamic-query-in-linq-using-predicate-builder/). 
 
 ## Datatable Options (View side)
 First you need to tell the plugin that it will be processed by the server by assigning these 2 options to true, and assign the url to the options 
@@ -62,7 +61,7 @@ all you need to assign is the type, any expressions you want to include (Navigat
 Below is an example you can find in HomeController\GetDTResponseAsync. 
 
 
-If you don't want to use the Repository, all you need to do is actually use the [GetOptionResponseAsync] Function, you can find it at [Datatable Helper class](https://github.com/rezres/DataTable-ServerSide-Implementation-Sample/blob/master/DataTable%20ServerSide%20%20Implementation%20Sample/Extensions/DataTableHelper.cs)
+If you don't want to use the Repository, all you need to do is actually use the `GetOptionResponseAsync` Function, you can find it at [Datatable Helper class](https://github.com/rezres/DataTable-ServerSide-Implementation-Sample/blob/master/DataTable%20ServerSide%20%20Implementation%20Sample/Extensions/DataTableHelper.cs)
 , this function will generate the IQuerable and execute it, and wrap the response, it is an extension method of IQuerable.
 You can use it like this. 
 
