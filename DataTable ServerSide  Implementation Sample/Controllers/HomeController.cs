@@ -17,13 +17,15 @@ namespace DataTable_ServerSide__Implementation_Sample.Controllers
     {
         protected IRepo<Product> ProductRepo;
         protected IRepo<Category> CategoryRepo;
+        protected ISpecification<Product> Specification;
         protected readonly ILogger<HomeController> ILogger;
 
-        public HomeController(IRepo<Product> _repo, IRepo<Category> _CategoryRepo, ILogger<HomeController> _logger)
+        public HomeController(IRepo<Product> _repo, IRepo<Category> _CategoryRepo, ILogger<HomeController> _logger, ISpecification<Product> specification)
         {
             this.ProductRepo = _repo;
             this.CategoryRepo = _CategoryRepo;
             this.ILogger = _logger;
+            this.Specification = specification;
         }
 
         public IActionResult Index()
@@ -35,8 +37,10 @@ namespace DataTable_ServerSide__Implementation_Sample.Controllers
         {
             try
             {
-                var specs = new BaseSpecification<Product>(i => i.Id == id, e => e.MainCategory, z => z.SubCategory);
-                var objList = await ProductRepo.GetFirstBySpecsAsync(specs);
+                Specification.AddFilter(i => i.Id == id);
+                Specification.AddInclude(e => e.MainCategory);
+                Specification.AddInclude(z => z.SubCategory);
+                var objList = await ProductRepo.GetFirstBySpecsAsync(Specification);
                 return PartialView(objList);
             }
             catch (Exception e)
@@ -50,8 +54,10 @@ namespace DataTable_ServerSide__Implementation_Sample.Controllers
         {
             try
             {
-                var specs = new BaseSpecification<Product>(e => e.MainCategory,e => e.SubCategory);
-                return Ok(await ProductRepo.GetOptionResponseWithSpec(options, specs));
+                Specification.AddInclude(e => e.MainCategory);
+                Specification.AddInclude(e => e.SubCategory);
+
+                return Ok(await ProductRepo.GetOptionResponseWithSpec(options, Specification));
             }
             catch (Exception e)
             {
@@ -99,10 +105,10 @@ namespace DataTable_ServerSide__Implementation_Sample.Controllers
         {
             try
             {
-                var specs = new BaseSpecification<Product>(i => i.Id == id);
-                specs.AddInclude("MainCategory");
-                specs.AddInclude("SubCategory");
-                var objList = await ProductRepo.GetBySpecsAsync(specs);
+                Specification.AddInclude("MainCategory");
+                Specification.AddInclude("SubCategory");
+                Specification.AddFilter(e => e.Id == id);
+                var objList = await ProductRepo.GetBySpecsAsync(Specification);
                 var categories = await CategoryRepo.GetAll();
                 ViewBag.ddlCategories = new SelectList(categories, "ID", "Name");
 
@@ -114,7 +120,7 @@ namespace DataTable_ServerSide__Implementation_Sample.Controllers
 
                 return Error();
             }
-            }
+        }
 
         //// POST: Home/Edit/5
         [HttpPost]
@@ -137,10 +143,11 @@ namespace DataTable_ServerSide__Implementation_Sample.Controllers
         // GET: Home/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
-            var specs = new BaseSpecification<Product>(i => i.Id == id, i => i.MainCategory, e => e.SubCategory);
-            var objList = await ProductRepo.GetBySpecsAsync(specs);
-
-            return PartialView();
+            Specification.AddInclude("MainCategory");
+            Specification.AddInclude("SubCategory");
+            Specification.AddFilter(e => e.Id == id);
+            var objList = await ProductRepo.GetFirstBySpecsAsync(Specification);
+            return PartialView(objList);
         }
 
         // POST: Home/Delete/5

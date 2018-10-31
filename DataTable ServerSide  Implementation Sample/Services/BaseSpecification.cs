@@ -7,39 +7,34 @@ using System.Threading.Tasks;
 
 namespace DataTable_ServerSide__Implementation_Sample.Services
 {
-    public class BaseSpecification<T> : ISpecification<T>
+    public sealed class BaseSpecification<T> : ISpecification<T>
     {
+        private IList<Expression<Func<T, bool>>> _Criteria;
+        private IList<Expression<Func<T, object>>> _Includes;
+        private IList<string> _IncludeStrings;
+        public BaseSpecification() {
+            this._Criteria = new List<Expression<Func<T, bool>>>();
+            this._Includes = new List<Expression<Func<T, object>>>();
+            this._IncludeStrings = new List<string>();
+        }
 
-        //Init with Include Expressions
-        //Ex new BaseSpecification(e => e.NavigationProperty)
-        public BaseSpecification(params Expression<Func<T, object>>[] includes)
-        {
-            this.Includes.AddRange(includes);
-        }
-        //Include with Filtering Condition
-        //Ex new BaseSpecification(e => e.ID == 1)
-        public BaseSpecification(Expression<Func<T, bool>> criteria)
-        {
-            Criteria = criteria;
-        }
-        //Include with both Search Expression and Include Expressions
-        //Ex new BaseSpecification(e => e.ID == 1, e => e.NavigationProperty1,i => i.NavigationProperty2)
-        public BaseSpecification(Expression<Func<T, bool>> criteria, params Expression<Func<T, object>>[] includes)
-        {
-            Criteria = criteria;
-            this.Includes.AddRange(includes);
-        }
-        public Expression<Func<T, bool>> Criteria { get; private set; }
-        public List<Expression<Func<T, object>>> Includes { get; } = new List<Expression<Func<T, object>>>();
-        public List<string> IncludeStrings { get; } = new List<string>();
+        IList<Expression<Func<T, bool>>> ISpecification<T>.Criteria => this._Criteria;
 
-        public virtual void AddInclude(Expression<Func<T, object>> includeExpression)
+        IList<Expression<Func<T, object>>> ISpecification<T>.Includes => this._Includes;
+
+        IList<string> ISpecification<T>.IncludeStrings => this._IncludeStrings;
+
+        public  void AddInclude(Expression<Func<T, object>> includeExpression)
         {
-            Includes.Add(includeExpression);
+            this._Includes.Add(includeExpression);
         }
-        public virtual void AddInclude(string includeString)
+        public  void AddInclude(string includeString)
         {
-            IncludeStrings.Add(includeString);
+            this._IncludeStrings.Add(includeString);
+        }
+        public  void AddFilter(Expression<Func<T, bool>> criteria)
+        {
+            this._Criteria.Add(criteria);
         }
     }
 }

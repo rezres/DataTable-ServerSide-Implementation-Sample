@@ -44,19 +44,11 @@ namespace DataTable_ServerSide__Implementation_Sample.Services
         public async Task<IEnumerable<T>> GetBySpecsAsync(ISpecification<T> spec)
         {
             // return the result of the query using the specification's criteria expression
-            return await this.context.Set<T>()
-                                    .IncludeExpressions(spec.Includes)
-                                    .IncludeByNames(spec.IncludeStrings)
-                                    .Where(spec.Criteria)
-                                    .ToListAsync();
+            return await this.context.Set<T>().ProcessSpecification(spec).ToListAsync();
         }
         public async Task<T> GetFirstBySpecsAsync(ISpecification<T> spec)
         {
-            return await this.context.Set<T>()
-                                    .IncludeExpressions(spec.Includes)
-                                    .IncludeByNames(spec.IncludeStrings)
-                                    .Where(spec.Criteria)
-                                    .FirstOrDefaultAsync();
+            return await this.context.Set<T>().ProcessSpecification(spec).FirstOrDefaultAsync();
         }
         public async Task<T> Update(T data)
         {
@@ -76,14 +68,10 @@ namespace DataTable_ServerSide__Implementation_Sample.Services
         }
         public async Task<DataTableResponse> GetOptionResponseWithSpec(DataTableOptions options, ISpecification<T> spec)
         {
-            var data = await context.Set<T>()
-                                                .IncludeExpressions(spec.Includes)
-                                                .IncludeByNames(spec.IncludeStrings)
-                                                .GetOptionResponseAsync<T>(options);
+            var data = await context.Set<T>().ProcessSpecification(spec).GetOptionResponseAsync<T>(options);
 
             return data;
         }
-
         public void Dispose()
         {
             context.Dispose();

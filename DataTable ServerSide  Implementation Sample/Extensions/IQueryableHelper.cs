@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using DataTable_ServerSide__Implementation_Sample.Interfaces;
 
 namespace DataTable_ServerSide__Implementation_Sample.Extensions
 {
@@ -40,6 +41,15 @@ namespace DataTable_ServerSide__Implementation_Sample.Extensions
         }
 
 
+        public static IQueryable<T> ProcessSpecification<T>(this IQueryable<T> Set, ISpecification<T> specification) where T : class
+        {
+
+            return    Set.IncludeExpressions(specification.Includes)
+                        .IncludeByNames(specification.IncludeStrings)
+                        .FilterExpressions(specification.Criteria);
+        }
+
+
         public static IQueryable<T> IncludeExpressions<T>(this IQueryable<T> Set, IList<Expression<Func<T, object>>> IncludeExpression) where T : class
         {
             if (IncludeExpression.Count < 1)
@@ -55,6 +65,17 @@ namespace DataTable_ServerSide__Implementation_Sample.Extensions
                 return Set;
             return IncludeStrings
                 .Aggregate(Set, (current, include) => current.Include(include));
+        }
+
+
+        public static IQueryable<T> FilterExpressions<T>(this IQueryable<T> Set, IList<Expression<Func<T,bool>>> filters) where T : class
+        {
+            if (filters.Count < 1)
+                return Set;
+
+            var filterPredicate = filters.Aggregate((current, set) => current.Or(set));
+
+            return Set.Where(filterPredicate);
         }
 
     }
